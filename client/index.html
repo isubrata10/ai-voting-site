@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureVote | Modern Online Voting Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-vote-yea"></i>
+                <span>Secure<span class="logo-highlight">Vote</span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#security">Security</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="nav-cta" onclick="openRegistration()">
+                <i class="fas fa-user-plus"></i> Start Voting
+            </button>
+            <div class="mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="animate__animated animate__fadeInDown">
+                    <span class="hero-highlight">Democracy</span> in the Digital Age
+                </h1>
+                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                    A secure, transparent, and accessible online voting platform powered by advanced verification technology.
+                </p>
+                <div class="hero-buttons animate__animated animate__fadeIn animate__delay-2s">
+                    <button class="btn-primary btn-hero" onclick="openRegistration()">
+                        <i class="fas fa-play-circle"></i> Start Voting Now
+                    </button>
+                    <button class="btn-secondary btn-hero" onclick="scrollToSection('features')">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3 id="liveVoters">2,847</h3>
+                            <p>Active Voters</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <h3>100%</h3>
+                            <p>Secure Verification</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3><span id="hoursRemaining">48</span>h</h3>
+                            <p>Voting Ends In</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card animate__animated animate__fadeInRight">
+                    <div class="card-header">
+                        <h3><i class="fas fa-vote-yea"></i> Live Voting Dashboard</h3>
+                        <div class="live-indicator">
+                            <span class="live-dot"></span> LIVE
+                        </div>
+                    </div>
+                    <div class="vote-progress">
+                        <div class="candidate-bar" style="width: 45%; background: linear-gradient(90deg, #4A6FA5, #6A8BC5);">
+                            <span>Candidate A: 45%</span>
+                        </div>
+                        <div class="candidate-bar" style="width: 30%; background: linear-gradient(90deg, #FF6B6B, #FF8E8E);">
+                            <span>Candidate B: 30%</span>
+                        </div>
+                        <div class="candidate-bar" style="width: 15%; background: linear-gradient(90deg, #4ECDC4, #6ED7D0);">
+                            <span>Candidate C: 15%</span>
+                        </div>
+                        <div class="candidate-bar" style="width: 10%; background: linear-gradient(90deg, #FFD166, #FFDD8A);">
+                            <span>Candidate D: 10%</span>
+                        </div>
+                    </div>
+                    <div class="vote-stats">
+                        <div class="stat">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Total Votes: <strong id="totalVotes">12,458</strong></span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-user-check"></i>
+                            <span>Verified Today: <strong id="verifiedToday">847</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Advanced <span class="highlight">Security Features</span></h2>
+            <p class="section-subtitle">Our multi-layered security ensures every vote is protected</p>
+            
+            <div class="features-grid">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>OTP Verification</h3>
+                    <p>One-Time Password sent to your registered mobile number for initial authentication</p>
+                    <div class="feature-badge">Real-time SMS</div>
+                </div>
+                
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3>Aadhaar Integration</h3>
+                    <p>Secure identity verification using India's Aadhaar database with encrypted connections</p>
+                    <div class="feature-badge">UIDAI Certified</div>
+                </div>
+                
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Facial Recognition</h3>
+                    <p>AI-powered facial verification to prevent identity fraud and ensure voter authenticity</p>
+                    <div class="feature-badge">AI-Powered</div>
+                </div>
+                
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Geolocation Tracking</h3>
+                    <p>Secure location verification to prevent duplicate voting from multiple locations</p>
+                    <div class="feature-badge">GPS Verified</div>
+                </div>
+                
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Blockchain Security</h3>
+                    <p>Immutable vote recording on blockchain ensuring transparency and tamper-proof results</p>
+                    <div class="feature-badge">Blockchain</div>
+                </div>
+                
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Live voting statistics and analytics dashboard with transparent result tracking</p>
+                    <div class="feature-badge">Live Updates</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How to Vote in <span class="highlight">4 Simple Steps</span></h2>
+            
+            <div class="steps-container">
+                <div class="step-line"></div>
+                
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Register & Verify</h3>
+                        <p>Enter your details and verify with OTP sent to your registered mobile number</p>
+                        <div class="step-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Identity Confirmation</h3>
+                        <p>Complete Aadhaar verification and facial recognition for secure authentication</p>
+                        <div class="step-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Cast Your Vote</h3>
+                        <p>Select your preferred candidate from the secure voting interface</p>
+                        <div class="step-icon">
+                            <i class="fas fa-vote-yea"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Confirmation & Tracking</h3>
+                        <p>Receive immediate confirmation and track your vote through the blockchain</p>
+                        <div class="step-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voting Modal -->
+    <div id="votingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Start Your Voting Journey</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Registration Form -->
+                <div id="registration-section" class="modal-section active">
+                    <div class="form-header">
+                        <h3><i class="fas fa-user-circle"></i> Voter Registration</h3>
+                        <p>Enter your details to begin the secure voting process</p>
+                    </div>
+                    <form id="registration-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                                <input type="text" id="name" required placeholder="Enter your full name">
+                                <div class="input-hint">As per Aadhaar card</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone"><i class="fas fa-mobile-alt"></i> Mobile Number</label>
+                                <div class="input-with-country">
+                                    <span class="country-code">+91</span>
+                                    <input type="tel" id="phone" required placeholder="10-digit mobile number" maxlength="10">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="location"><i class="fas fa-map-marker-alt"></i> Voting Constituency</label>
+                                <select id="location" required>
+                                    <option value="">Select your constituency</option>
+                                    <option value="Delhi">Delhi Central</option>
+                                    <option value="Mumbai">Mumbai North</option>
+                                    <option value="Bangalore">Bangalore South</option>
+                                    <option value="Chennai">Chennai Central</option>
+                                    <option value="Kolkata">Kolkata North</option>
+                                    <option value="Hyderabad">Hyderabad</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="aadhaar"><i class="fas fa-id-card"></i> Aadhaar Number</label>
+                                <input type="text" id="aadhaar" required placeholder="12-digit Aadhaar number" maxlength="12">
+                                <div class="input-hint">Unique identification number</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-footer">
+                            <button type="submit" class="btn-primary btn-submit">
+                                <i class="fas fa-paper-plane"></i> Register & Send OTP
+                            </button>
+                            <div class="form-note">
+                                <i class="fas fa-shield-alt"></i> Your data is secured with 256-bit encryption
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- OTP Verification -->
+                <div id="otp-section" class="modal-section">
+                    <div class="form-header">
+                        <h3><i class="fas fa-shield-alt"></i> Mobile Verification</h3>
+                        <p>Enter the OTP sent to your registered mobile number</p>
+                    </div>
+                    <div class="otp-phone-display" id="phone-display"></div>
+                    
+                    <form id="otp-form">
+                        <div class="otp-inputs">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="0">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="1">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="2">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="3">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="4">
+                            <input type="text" maxlength="1" class="otp-digit" data-index="5">
+                        </div>
+                        <input type="hidden" id="otp-complete">
+                        
+                        <div class="otp-timer">
+                            <i class="fas fa-clock"></i>
+                            <span id="otp-timer">02:00</span> remaining
+                        </div>
+                        
+                        <div class="button-group">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-check-circle"></i> Verify OTP
+                            </button>
+                            <button type="button" id="resend-otp" class="btn-secondary">
+                                <i class="fas fa-redo"></i> Resend OTP
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Face Verification -->
+                <div id="face-verification-section" class="modal-section">
+                    <div class="form-header">
+                        <h3><i class="fas fa-user-check"></i> Identity Verification</h3>
+                        <p>Facial recognition for enhanced security</p>
+                    </div>
+                    
+                    <div class="face-verification-container">
+                        <div class="camera-wrapper">
+                            <div class="camera-frame">
+                                <video id="video" autoplay playsinline></video>
+                                <canvas id="canvas"></canvas>
+                                <div class="face-overlay">
+                                    <div class="face-guide"></div>
+                                    <div class="face-instruction">
+                                        <i class="fas fa-user-circle"></i>
+                                        <p>Position your face within the circle</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="camera-controls">
+                                <button id="capture-btn" class="btn-primary">
+                                    <i class="fas fa-camera"></i> Capture Face
+                                </button>
+                                <button id="retake-btn" class="btn-secondary">
+                                    <i class="fas fa-redo"></i> Retake
+                                </button>
+                                <button id="skip-face" class="btn-tertiary">
+                                    <i class="fas fa-forward"></i> Skip for Demo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="captured-photo" id="captured-photo-container">
+                            <h4><i class="fas fa-image"></i> Captured Photo</h4>
+                            <img id="captured-photo" src="" alt="Captured photo">
+                        </div>
+                    </div>
+                    
+                    <div class="verification-status">
+                        <div id="verification-loader" class="loader">
+                            <div class="spinner"></div>
+                            <p>Verifying your identity with Aadhaar database...</p>
+                        </div>
+                        <div id="verification-success" class="verification-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <h4>Identity Verified Successfully!</h4>
+                                <p>Your face has been matched with Aadhaar records</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voting Booth -->
+                <div id="voting-section" class="modal-section">
+                    <div class="form-header">
+                        <h3><i class="fas fa-vote-yea"></i> Voting Booth</h3>
+                        <p>Cast your vote securely</p>
+                    </div>
+                    
+                    <div class="voter-info-card">
+                        <div class="voter-avatar">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="voter-details">
+                            <h4 id="voter-name">Voter Name</h4>
+                            <p><i class="fas fa-map-marker-alt"></i> <span id="voter-location">Location</span></p>
+                            <p><i class="fas fa-id-card"></i> Verified Voter</p>
+                        </div>
+                        <div class="voter-status">
+                            <span class="status-badge verified">Verified</span>
+                        </div>
+                    </div>
+                    
+                    <div class="candidates-grid" id="candidates-list">
+                        <!-- Candidates will be loaded here -->
+                    </div>
+                    
+                    <div class="vote-confirmation" id="vote-confirmation">
+                        <div class="confirmation-box">
+                            <div class="confirmation-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="confirmation-content">
+                                <h4>Confirm Your Vote</h4>
+                                <p>You are about to vote for:</p>
+                                <div class="selected-candidate" id="selected-candidate-name">
+                                    Candidate Name
+                                </div>
+                                <p class="warning-text"><i class="fas fa-exclamation-triangle"></i> This action cannot be undone</p>
+                                <div class="confirmation-buttons">
+                                    <button id="confirm-vote" class="btn-primary">
+                                        <i class="fas fa-check"></i> Confirm Vote
+                                    </button>
+                                    <button id="cancel-vote" class="btn-secondary">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="vote-success" id="vote-success">
+                        <div class="success-animation">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Your Vote Has Been Recorded!</h3>
+                        <p>Thank you for participating in the democratic process.</p>
+                        <div class="vote-receipt">
+                            <p><i class="fas fa-hashtag"></i> Vote ID: <strong id="vote-id">VS-2023-001</strong></p>
+                            <p><i class="fas fa-clock"></i> Time: <strong id="vote-time">Just now</strong></p>
+                            <p><i class="fas fa-fingerprint"></i> Verification: <strong>Blockchain Confirmed</strong></p>
+                        </div>
+                        <button id="view-status" class="btn-primary">
+                            <i class="fas fa-poll"></i> View Voting Status
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Steps -->
+            <div class="modal-progress">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-dot"></div>
+                        <span>Register</span>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-dot"></div>
+                        <span>OTP</span>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-dot"></div>
+                        <span>Face Verify</span>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-dot"></div>
+                        <span>Vote</span>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Section -->
+    <section id="security" class="security">
+        <div class="container">
+            <h2 class="section-title">Enterprise-Grade <span class="highlight">Security</span></h2>
+            
+            <div class="security-grid">
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>End-to-End Encryption</h3>
+                    <p>All voter data is encrypted using AES-256 encryption both in transit and at rest</p>
+                    <div class="security-metrics">
+                        <div class="metric">
+                            <span class="metric-value">256-bit</span>
+                            <span class="metric-label">Encryption</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <h3>Blockchain Ledger</h3>
+                    <p>Every vote is recorded on a decentralized blockchain for complete transparency</p>
+                    <div class="security-metrics">
+                        <div class="metric">
+                            <span class="metric-value">100%</span>
+                            <span class="metric-label">Tamper-proof</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>Secure Infrastructure</h3>
+                    <p>Hosted on certified data centers with DDoS protection and regular security audits</p>
+                    <div class="security-metrics">
+                        <div class="metric">
+                            <span class="metric-value">ISO 27001</span>
+                            <span class="metric-label">Certified</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <i class="fas fa-vote-yea"></i>
+                        <span>Secure<span class="logo-highlight">Vote</span></span>
+                    </div>
+                    <p class="footer-description">
+                        A secure, transparent, and accessible online voting platform for the digital age.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#security">Security</a></li>
+                        <li><a href="#" onclick="openRegistration()">Start Voting</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Voter Guide</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-envelope"></i> support@securevote.com</p>
+                        <p><i class="fas fa-phone"></i> +91 1800-123-4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> New Delhi, India</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 SecureVote. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="openRegistration()">
+        <i class="fas fa-vote-yea"></i>
+        <span>Vote Now</span>
+    </button>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Processing your request...</p>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <div class="toast-message">Operation completed successfully!</div>
+            <button class="toast-close" onclick="hideToast()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+</body>
+</html>
