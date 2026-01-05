@@ -5,11 +5,22 @@ const winston = require('winston');
 class OTPService {
   constructor() {
     // In production, use Twilio
-    // this.client = twilio(
-    //   process.env.TWILIO_ACCOUNT_SID,
-    //   process.env.TWILIO_AUTH_TOKEN
-    // );
-    
+    // Initialize Twilio client only if environment variables are provided
+    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+      try {
+        this.client = twilio(
+          process.env.TWILIO_ACCOUNT_SID,
+          process.env.TWILIO_AUTH_TOKEN
+        );
+        winston.info('Twilio client initialized');
+      } catch (err) {
+        winston.error('Failed to initialize Twilio client: ' + err.message);
+        this.client = null;
+      }
+    } else {
+      this.client = null;
+    }
+
     this.otpExpiry = 2 * 60 * 1000; // 2 minutes
     this.otpStore = new Map(); // In-memory store for demo
   }
@@ -18,11 +29,13 @@ class OTPService {
     try {
       // Generate 6-digit OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      const expiresAt = new Date(Date.now() + this.otpExpiry);
-      
+      const createdAt = new Date();
+      const expiresAt = new Date(createdAt.getTime() + this.otpExpiry);
+
       // Store OTP in memory (in production, use Redis)
       this.otpStore.set(phone, {
         otp,
+        createdAt,
         expiresAt,
         attempts: 0
       });
@@ -30,21 +43,45 @@ class OTPService {
       // Clean expired OTPs
       this.cleanExpiredOTPs();
       
-      // In production, send via Twilio
-      // await this.client.messages.create({
-      //   body: `Your SecureVote OTP is: ${otp}. Valid for 2 minutes.`,
-      //   from: process.env.TWILIO_PHONE_NUMBER,
-      //   to: `+91${phone}`
-      // });
-      
-      // For demo, log the OTP
+      // If Twilio client is configured, send SMS
+      if (this.client) {
+        try {
+          const countryCode = process.env.DEFAULT_COUNTRY_CODE || '+91';
+          const toNumber = phone.startsWith('+') ? phone : `${countryCode}${phone}`;
+
+          await this.client.messages.create({
+            body: `Your SecureVote OTP is: ${otp}. Valid for 2 minutes.`,
+            from: process.env.TWILIO_PHONE_NUMBER,
+            to: toNumber
+          });
+
+          winston.info(`OTP sent via Twilio to ${toNumber}`);
+
+          return {
+            success: true,
+            expiresAt,
+            message: 'OTP sent successfully'
+          };
+        } catch (sendErr) {
+          winston.error(`Twilio send error: ${sendErr.message}`);
+          // fall back to returning OTP for debug, but mark as not sent
+          return {
+            success: false,
+            error: 'Failed to send OTP via SMS',
+            debugOtp: otp,
+            expiresAt
+          };
+        }
+      }
+
+      // For demo (no Twilio), log and return OTP so developer can test
       winston.info(`OTP for ${phone}: ${otp}`);
-      
+
       return {
         success: true,
         otp, // In production, don't return OTP
         expiresAt,
-        message: 'OTP generated successfully'
+        message: 'OTP generated (demo)'
       };
       
     } catch (error) {
@@ -109,21 +146,21 @@ class OTPService {
   }
 
   async resendOTP(phone) {
-    // Check if recent OTP exists
+    // Check if recent OTP exists and enforce cooldown
     const otpData = this.otpStore.get(phone);
-    
+    const cooldownMs = 30 * 1000; // 30 seconds
+
     if (otpData) {
-      const timeSinceLastOTP = Date.now() - otpData.expiresAt.getTime() + this.otpExpiry;
-      
-      if (timeSinceLastOTP < 30000) { // 30 seconds cooldown
+      const timeSinceLast = Date.now() - otpData.createdAt.getTime();
+      if (timeSinceLast < cooldownMs) {
         return {
           success: false,
           error: 'Please wait before requesting new OTP',
-          retryAfter: Math.ceil((30000 - timeSinceLastOTP) / 1000)
+          retryAfter: Math.ceil((cooldownMs - timeSinceLast) / 1000)
         };
       }
     }
-    
+
     return this.generateOTP(phone);
   }
 
