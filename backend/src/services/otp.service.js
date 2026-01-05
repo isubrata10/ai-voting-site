@@ -6,7 +6,7 @@ class OTPService {
   constructor() {
     // In production, use Twilio
     // Initialize Twilio client only if environment variables are provided
-    if (process.env.AC1513c303c4f1a0a2bd5a8778bd783555 && process.env.de4c97504f470a2006b75c7a5a2ad9f0) {
+    if (process.env.AC1513c303c4f1a0a2bd5a8778bd783555 && process.env.de4c97504f470a2006b75c7a5a2ad9f0 && process.env.TWILIO_PHONE_NUMBER) {
       try {
         this.client = twilio(
           process.env.AC1513c303c4f1a0a2bd5a8778bd783555,
