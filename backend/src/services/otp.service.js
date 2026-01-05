@@ -6,11 +6,11 @@ class OTPService {
   constructor() {
     // In production, use Twilio
     // Initialize Twilio client only if environment variables are provided
-    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER) {
+    if (process.env.AC1513c303c4f1a0a2bd5a8778bd783555 && process.env.de4c97504f470a2006b75c7a5a2ad9f0) {
       try {
         this.client = twilio(
-          process.env.TWILIO_ACCOUNT_SID,
-          process.env.TWILIO_AUTH_TOKEN
+          process.env.AC1513c303c4f1a0a2bd5a8778bd783555,
+          process.env.de4c97504f470a2006b75c7a5a2ad9f0
         );
         winston.info('Twilio client initialized');
       } catch (err) {
@@ -86,7 +86,7 @@ class OTPService {
       
     } catch (error) {
       winston.error(`OTP Generation Error: ${error.message}`);
-      throw new Error('Failed to generate OTP');
+      return { success: false, error: 'Failed to generate OTP' };
     }
   }
 
@@ -141,7 +141,7 @@ class OTPService {
       
     } catch (error) {
       winston.error(`OTP Verification Error: ${error.message}`);
-      throw new Error('Failed to verify OTP');
+      return { success: false, error: 'Failed to verify OTP' };
     }
   }
 
