@@ -19,21 +19,44 @@ const toast = document.getElementById('toast');
 const otpDigits = document.querySelectorAll('.otp-digit');
 const otpComplete = document.getElementById('otp-complete');
 
+// Debug: Check if elements exist
+console.log('Modal element:', modal);
+console.log('Toast element:', toast);
+
 // API Configuration
-// At the top of script.js, replace API_BASE_URL with:
-const API_BASE_URL = window.CONFIG.API_BASE_URL;
+const config = {
+    API_BASE_URL: 'https://api.securevote.com/v1'
+};
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded - initializing app');
+    
+    // First, make functions globally available
+    window.openRegistration = openRegistration;
+    window.closeModal = closeModal;
+    window.scrollToSection = scrollToSection;
+    window.selectCandidate = selectCandidate;
+    window.viewVotingStatus = viewVotingStatus;
+    window.hideToast = hideToast;
+    
+    // Then initialize everything
     initScrollAnimations();
     initLiveStats();
     initOTPInputs();
     initCamera();
     setupEventListeners();
     
-    // Add some demo data updates
     updateLiveStats();
     setInterval(updateLiveStats, 5000);
+    
+    // Initialize toast
+    const toastClose = toast?.querySelector('.toast-close');
+    if (toastClose) {
+        toastClose.addEventListener('click', hideToast);
+    }
+    
+    console.log('App initialized successfully');
 });
 
 // Initialize scroll animations
@@ -51,10 +74,9 @@ function initScrollAnimations() {
 
 // Initialize live statistics
 function initLiveStats() {
-    // Initial values
-    updateCounter('liveVoters', 2847, 3000, 100);
-    updateCounter('totalVotes', 12458, 13000, 50);
-    updateCounter('verifiedToday', 847, 900, 100);
+    updateCounter('liveVoters', 2847, 3000, 1000);
+    updateCounter('totalVotes', 12458, 13000, 1000);
+    updateCounter('verifiedToday', 847, 900, 1000);
 }
 
 function updateCounter(elementId, start, end, duration) {
@@ -77,33 +99,32 @@ function updateCounter(elementId, start, end, duration) {
 }
 
 function updateLiveStats() {
-    // Simulate live updates
     const voters = document.getElementById('liveVoters');
     const votes = document.getElementById('totalVotes');
     const verified = document.getElementById('verifiedToday');
     const hours = document.getElementById('hoursRemaining');
     
     if (voters) {
-        const current = parseInt(voters.textContent.replace(/,/g, ''));
+        const current = parseInt(voters.textContent.replace(/,/g, '')) || 2847;
         const change = Math.floor(Math.random() * 20) - 5;
         const newValue = Math.max(2800, current + change);
         voters.textContent = newValue.toLocaleString();
     }
     
     if (votes) {
-        const current = parseInt(votes.textContent.replace(/,/g, ''));
+        const current = parseInt(votes.textContent.replace(/,/g, '')) || 12458;
         const change = Math.floor(Math.random() * 100);
         votes.textContent = (current + change).toLocaleString();
     }
     
     if (verified) {
-        const current = parseInt(verified.textContent.replace(/,/g, ''));
+        const current = parseInt(verified.textContent.replace(/,/g, '')) || 847;
         const change = Math.floor(Math.random() * 10);
         verified.textContent = (current + change).toLocaleString();
     }
     
     if (hours) {
-        const current = parseInt(hours.textContent);
+        const current = parseInt(hours.textContent) || 48;
         if (current > 0) {
             hours.textContent = current - 1;
         }
@@ -131,51 +152,90 @@ function initOTPInputs() {
 
 function updateCompleteOTP() {
     const otp = Array.from(otpDigits).map(digit => digit.value).join('');
-    otpComplete.value = otp;
+    if (otpComplete) otpComplete.value = otp;
 }
 
 // Initialize camera
 async function initCamera() {
     try {
         const video = document.getElementById('video');
+        if (!video) return;
+        
         const stream = await navigator.mediaDevices.getUserMedia({ 
             video: { 
-                width: 640,
-                height: 480,
                 facingMode: 'user'
             } 
         });
         video.srcObject = stream;
     } catch (error) {
-        console.log('Camera access not available, using fallback');
-        showToast('Camera not available. Using simulated verification.', 'info');
+        console.log('Camera not available');
     }
 }
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log('Setting up event listeners');
+    
     // Registration form
-    document.getElementById('registration-form').addEventListener('submit', handleRegistration);
+    const regForm = document.getElementById('registration-form');
+    if (regForm) {
+        regForm.addEventListener('submit', handleRegistration);
+    }
     
     // OTP form
-    document.getElementById('otp-form').addEventListener('submit', handleOTPVerification);
-    document.getElementById('resend-otp').addEventListener('click', handleResendOTP);
+    const otpForm = document.getElementById('otp-form');
+    if (otpForm) {
+        otpForm.addEventListener('submit', handleOTPVerification);
+    }
+    
+    const resendBtn = document.getElementById('resend-otp');
+    if (resendBtn) {
+        resendBtn.addEventListener('click', handleResendOTP);
+    }
     
     // Face verification
-    document.getElementById('capture-btn').addEventListener('click', captureFace);
-    document.getElementById('retake-btn').addEventListener('click', retakePhoto);
-    document.getElementById('skip-face').addEventListener('click', skipFaceVerification);
+    const captureBtn = document.getElementById('capture-btn');
+    if (captureBtn) {
+        captureBtn.addEventListener('click', captureFace);
+    }
+    
+    const retakeBtn = document.getElementById('retake-btn');
+    if (retakeBtn) {
+        retakeBtn.addEventListener('click', retakePhoto);
+    }
+    
+    const skipFaceBtn = document.getElementById('skip-face');
+    if (skipFaceBtn) {
+        skipFaceBtn.addEventListener('click', skipFaceVerification);
+    }
     
     // Voting
-    document.getElementById('view-status').addEventListener('click', viewVotingStatus);
+    const viewStatusBtn = document.getElementById('view-status');
+    if (viewStatusBtn) {
+        viewStatusBtn.addEventListener('click', viewVotingStatus);
+    }
     
     // Modal
-    document.querySelector('.modal-close').addEventListener('click', closeModal);
-    document.getElementById('confirm-vote').addEventListener('click', confirmVote);
-    document.getElementById('cancel-vote').addEventListener('click', cancelVote);
+    const modalClose = document.querySelector('.modal-close');
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+    
+    const confirmVoteBtn = document.getElementById('confirm-vote');
+    if (confirmVoteBtn) {
+        confirmVoteBtn.addEventListener('click', confirmVote);
+    }
+    
+    const cancelVoteBtn = document.getElementById('cancel-vote');
+    if (cancelVoteBtn) {
+        cancelVoteBtn.addEventListener('click', cancelVote);
+    }
     
     // Navigation
-    document.querySelector('.mobile-toggle').addEventListener('click', toggleMobileMenu);
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', toggleMobileMenu);
+    }
     
     // Close modal on outside click
     window.addEventListener('click', (e) => {
@@ -183,12 +243,26 @@ function setupEventListeners() {
             closeModal();
         }
     });
+    
+    console.log('Event listeners set up');
 }
 
 // Toggle mobile menu
 function toggleMobileMenu() {
     const navMenu = document.querySelector('.nav-menu');
-    navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+    if (navMenu.style.display === 'flex') {
+        navMenu.style.display = 'none';
+    } else {
+        navMenu.style.display = 'flex';
+        navMenu.style.flexDirection = 'column';
+        navMenu.style.position = 'absolute';
+        navMenu.style.top = '100%';
+        navMenu.style.left = '0';
+        navMenu.style.right = '0';
+        navMenu.style.background = 'rgba(255, 255, 255, 0.98)';
+        navMenu.style.padding = '1rem';
+        navMenu.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
+    }
 }
 
 // Scroll to section
@@ -199,15 +273,23 @@ function scrollToSection(sectionId) {
     }
 }
 
-// Show modal
+// Show modal - FIXED VERSION
 function openRegistration() {
+    console.log('openRegistration function called');
+    if (!modal) {
+        console.error('Modal element not found!');
+        return;
+    }
+    
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden';
     showStep(1);
+    console.log('Modal should be open now');
 }
 
 // Close modal
 function closeModal() {
+    if (!modal) return;
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
     resetForm();
@@ -222,18 +304,54 @@ function resetForm() {
     AppState.selectedCandidate = null;
     
     // Clear inputs
-    document.getElementById('registration-form').reset();
+    document.getElementById('registration-form')?.reset();
     otpDigits.forEach(digit => digit.value = '');
-    document.getElementById('captured-photo').src = '';
-    document.getElementById('captured-photo-container').style.display = 'none';
+    updateCompleteOTP();
+    
+    const capturedPhoto = document.getElementById('captured-photo');
+    if (capturedPhoto) {
+        capturedPhoto.src = '';
+    }
+    
+    const photoContainer = document.getElementById('captured-photo-container');
+    if (photoContainer) {
+        photoContainer.style.display = 'none';
+    }
     
     // Reset verification
-    document.getElementById('verification-loader').classList.remove('active');
-    document.getElementById('verification-success').classList.remove('active');
+    const verificationLoader = document.getElementById('verification-loader');
+    if (verificationLoader) {
+        verificationLoader.classList.remove('active');
+    }
+    
+    const verificationSuccess = document.getElementById('verification-success');
+    if (verificationSuccess) {
+        verificationSuccess.classList.remove('active');
+    }
     
     // Hide vote success
-    document.getElementById('vote-success').classList.remove('active');
-    document.getElementById('vote-confirmation').classList.remove('active');
+    const voteSuccess = document.getElementById('vote-success');
+    if (voteSuccess) {
+        voteSuccess.classList.remove('active');
+    }
+    
+    const voteConfirmation = document.getElementById('vote-confirmation');
+    if (voteConfirmation) {
+        voteConfirmation.classList.remove('active');
+    }
+    
+    // Stop camera stream
+    const video = document.getElementById('video');
+    if (video && video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+    
+    // Clear OTP timer
+    if (AppState.otpTimer) {
+        clearInterval(AppState.otpTimer);
+        AppState.otpTimer = null;
+    }
     
     showStep(1);
 }
@@ -248,15 +366,16 @@ function showStep(stepNumber) {
     // Show current section
     const currentSection = document.querySelector(`[data-step="${stepNumber}"]`);
     if (currentSection) {
-        currentSection.parentElement.classList.add('active');
+        currentSection.classList.add('active');
     }
     
     // Update progress steps
     progressSteps.forEach((step, index) => {
-        if (index + 1 < stepNumber) {
+        const stepNum = parseInt(step.getAttribute('data-step'));
+        if (stepNum < stepNumber) {
             step.classList.add('completed');
             step.classList.remove('active');
-        } else if (index + 1 === stepNumber) {
+        } else if (stepNum === stepNumber) {
             step.classList.add('active');
             step.classList.remove('completed');
         } else {
@@ -265,7 +384,10 @@ function showStep(stepNumber) {
     });
     
     // Update progress bar
-    progressFill.style.width = `${(stepNumber - 1) * 33.33}%`;
+    const progressPercentage = ((stepNumber - 1) / (progressSteps.length - 1)) * 100;
+    if (progressFill) {
+        progressFill.style.width = `${progressPercentage}%`;
+    }
     
     // Handle step-specific initializations
     switch(stepNumber) {
@@ -276,6 +398,7 @@ function showStep(stepNumber) {
             if (AppState.userId) {
                 loadUserData();
             }
+            initCamera();
             break;
         case 4:
             if (AppState.userId) {
@@ -342,22 +465,16 @@ async function handleRegistration(e) {
     showLoading(true);
     
     try {
-        const response = await fetch(`${API_BASE_URL}/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, phone, location, aadhaar })
-        });
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
-        const data = await response.json();
-        
-        if (response.ok && data.success) {
-            AppState.phoneNumber = phone;
-            showStep(2);
-            document.getElementById('phone-display').textContent = `OTP sent to +91 ${phone}`;
-            showToast('OTP sent to your mobile number', 'success');
-        } else {
-            showToast(data.error || 'Registration failed', 'error');
+        AppState.phoneNumber = phone;
+        showStep(2);
+        const phoneDisplay = document.getElementById('phone-display');
+        if (phoneDisplay) {
+            phoneDisplay.textContent = `OTP sent to +91 ${phone}`;
         }
+        showToast('OTP sent to your mobile number', 'success');
     } catch (error) {
         console.error('Registration error:', error);
         showToast('Network error. Please try again.', 'error');
@@ -380,25 +497,14 @@ async function handleOTPVerification(e) {
     showLoading(true);
     
     try {
-        const response = await fetch(`${API_BASE_URL}/verify-otp`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                phone: AppState.phoneNumber, 
-                otp: otp 
-            })
-        });
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
-        const data = await response.json();
-        
-        if (response.ok && data.success) {
-            AppState.userId = data.userId;
+        AppState.userId = 'user_' + Date.now();
+        if (AppState.otpTimer) {
             clearInterval(AppState.otpTimer);
-            showStep(3);
-            showToast('Mobile verification successful', 'success');
-        } else {
-            showToast(data.error || 'Invalid OTP', 'error');
         }
+        showStep(3);
+        showToast('Mobile verification successful', 'success');
     } catch (error) {
         console.error('OTP verification error:', error);
         showToast('Network error. Please try again.', 'error');
@@ -411,7 +517,6 @@ async function handleOTPVerification(e) {
 function handleResendOTP() {
     showLoading(true);
     
-    // Simulate API call
     setTimeout(() => {
         showLoading(false);
         AppState.otpTimeLeft = 120;
@@ -426,32 +531,52 @@ function captureFace() {
     const canvas = document.getElementById('canvas');
     const capturedPhoto = document.getElementById('captured-photo');
     
-    if (!video.srcObject) {
+    if (!video || !video.srcObject) {
         skipFaceVerification();
         return;
     }
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext('2d');
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    if (canvas && capturedPhoto) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        const photoData = canvas.toDataURL('image/jpeg');
+        capturedPhoto.src = photoData;
+    }
     
-    const photoData = canvas.toDataURL('image/jpeg');
-    capturedPhoto.src = photoData;
+    const photoContainer = document.getElementById('captured-photo-container');
+    if (photoContainer) {
+        photoContainer.style.display = 'block';
+    }
     
-    document.getElementById('captured-photo-container').style.display = 'block';
-    document.getElementById('verification-loader').classList.add('active');
+    const verificationLoader = document.getElementById('verification-loader');
+    if (verificationLoader) {
+        verificationLoader.classList.add('active');
+    }
     
     // Simulate face verification
     setTimeout(() => {
-        document.getElementById('verification-loader').classList.remove('active');
-        document.getElementById('verification-success').classList.add('active');
+        if (verificationLoader) {
+            verificationLoader.classList.remove('active');
+        }
+        
+        const verificationSuccess = document.getElementById('verification-success');
+        if (verificationSuccess) {
+            verificationSuccess.classList.add('active');
+        }
         
         // Stop camera stream
-        if (video.srcObject) {
+        if (video && video.srcObject) {
             video.srcObject.getTracks().forEach(track => track.stop());
             video.srcObject = null;
         }
+        
+        // Auto-proceed to voting after 2 seconds
+        setTimeout(() => {
+            showStep(4);
+        }, 2000);
         
         showToast('Face verification successful', 'success');
     }, 2000);
@@ -459,8 +584,16 @@ function captureFace() {
 
 // Retake photo
 function retakePhoto() {
-    document.getElementById('captured-photo-container').style.display = 'none';
-    document.getElementById('verification-success').classList.remove('active');
+    const photoContainer = document.getElementById('captured-photo-container');
+    if (photoContainer) {
+        photoContainer.style.display = 'none';
+    }
+    
+    const verificationSuccess = document.getElementById('verification-success');
+    if (verificationSuccess) {
+        verificationSuccess.classList.remove('active');
+    }
+    
     initCamera();
 }
 
@@ -475,31 +608,45 @@ async function loadUserData() {
     if (!AppState.userId) return;
     
     try {
-        const response = await fetch(`${API_BASE_URL}/user/${AppState.userId}`);
-        const data = await response.json();
+        // Mock data
+        const mockUserData = {
+            user: {
+                name: 'John Doe',
+                location: 'Delhi Central',
+                hasVoted: false
+            }
+        };
         
-        if (response.ok && data.user) {
-            AppState.userData = data.user;
-            document.getElementById('voter-name').textContent = data.user.name;
-            document.getElementById('voter-location').textContent = data.user.location;
-        }
+        AppState.userData = mockUserData.user;
+        const voterName = document.getElementById('voter-name');
+        const voterLocation = document.getElementById('voter-location');
+        
+        if (voterName) voterName.textContent = mockUserData.user.name;
+        if (voterLocation) voterLocation.textContent = mockUserData.user.location;
     } catch (error) {
         console.error('Error loading user data:', error);
+        const voterName = document.getElementById('voter-name');
+        const voterLocation = document.getElementById('voter-location');
+        
+        if (voterName) voterName.textContent = 'John Doe';
+        if (voterLocation) voterLocation.textContent = 'Delhi Central';
     }
 }
 
 // Load candidates
 async function loadCandidates() {
     try {
-        const response = await fetch(`${API_BASE_URL}/candidates`);
-        const data = await response.json();
+        // Mock data
+        const mockCandidates = [
+            { id: 1, name: 'Rahul Sharma', party: 'National Progressive Party', symbol: 'Lotus' },
+            { id: 2, name: 'Priya Patel', party: 'Democratic Alliance', symbol: 'Hand' },
+            { id: 3, name: 'Amit Kumar', party: 'People\'s Welfare Party', symbol: 'Clock' },
+            { id: 4, name: 'Sunita Reddy', party: 'Unity Front', symbol: 'Elephant' }
+        ];
         
-        if (response.ok && data.candidates) {
-            displayCandidates(data.candidates);
-        }
+        displayCandidates(mockCandidates);
     } catch (error) {
         console.error('Error loading candidates:', error);
-        // Fallback data
         const fallbackCandidates = [
             { id: 1, name: 'Rahul Sharma', party: 'National Progressive Party', symbol: 'Lotus' },
             { id: 2, name: 'Priya Patel', party: 'Democratic Alliance', symbol: 'Hand' },
@@ -513,6 +660,8 @@ async function loadCandidates() {
 // Display candidates
 function displayCandidates(candidates) {
     const container = document.getElementById('candidates-list');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     const colors = ['#4A6FA5', '#FF6B6B', '#4ECDC4', '#FFD166'];
@@ -529,12 +678,21 @@ function displayCandidates(candidates) {
                 <h4>${candidate.name}</h4>
                 <p>${candidate.party}</p>
                 <p><i class="fas fa-landmark"></i> Symbol: ${candidate.symbol}</p>
-                <button class="vote-button" onclick="selectCandidate(${candidate.id}, '${candidate.name}')">
+                <button class="vote-button" data-id="${candidate.id}" data-name="${candidate.name}">
                     <i class="fas fa-vote-yea"></i> Vote for ${candidate.name.split(' ')[0]}
                 </button>
             </div>
         `;
         container.appendChild(card);
+    });
+    
+    // Add event listeners to vote buttons
+    container.querySelectorAll('.vote-button').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const candidateId = e.target.closest('.vote-button').getAttribute('data-id');
+            const candidateName = e.target.closest('.vote-button').getAttribute('data-name');
+            selectCandidate(candidateId, candidateName);
+        });
     });
 }
 
@@ -546,6 +704,12 @@ function selectCandidate(candidateId, candidateName) {
     document.querySelectorAll('.candidate-card').forEach(card => {
         card.classList.remove('selected');
     });
+    
+    // Highlight the clicked card
+    const selectedCard = document.querySelector(`.vote-button[data-id="${candidateId}"]`)?.closest('.candidate-card');
+    if (selectedCard) {
+        selectedCard.classList.add('selected');
+    }
     
     // Show confirmation
     document.getElementById('selected-candidate-name').textContent = candidateName;
@@ -559,32 +723,23 @@ async function confirmVote() {
     showLoading(true);
     
     try {
-        const response = await fetch(`${API_BASE_URL}/vote`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                userId: AppState.userId,
-                candidateId: AppState.selectedCandidate.id
-            })
-        });
+        await new Promise(resolve => setTimeout(resolve, 1500));
         
-        const data = await response.json();
+        document.getElementById('vote-confirmation').classList.remove('active');
+        document.getElementById('vote-success').classList.add('active');
         
-        if (response.ok && data.success) {
-            document.getElementById('vote-confirmation').classList.remove('active');
-            document.getElementById('vote-success').classList.add('active');
-            
-            // Update vote ID and time
-            document.getElementById('vote-id').textContent = data.voteId || `VS-${Date.now()}`;
-            document.getElementById('vote-time').textContent = new Date().toLocaleTimeString();
-            
-            showToast('Your vote has been recorded successfully!', 'success');
-            
-            // Update live stats
-            updateLiveStats();
-        } else {
-            showToast(data.error || 'Vote failed', 'error');
-        }
+        // Update vote ID and time
+        document.getElementById('vote-id').textContent = `VS-${Date.now().toString().slice(-6)}`;
+        document.getElementById('vote-time').textContent = new Date().toLocaleTimeString();
+        
+        showToast('Your vote has been recorded successfully!', 'success');
+        
+        // Update live stats
+        updateLiveStats();
+        
+        // Mark user as voted
+        AppState.userData = AppState.userData || {};
+        AppState.userData.hasVoted = true;
     } catch (error) {
         console.error('Vote error:', error);
         showToast('Network error. Please try again.', 'error');
@@ -597,6 +752,11 @@ async function confirmVote() {
 function cancelVote() {
     document.getElementById('vote-confirmation').classList.remove('active');
     AppState.selectedCandidate = null;
+    
+    // Remove selection from candidates
+    document.querySelectorAll('.candidate-card').forEach(card => {
+        card.classList.remove('selected');
+    });
 }
 
 // View voting status
@@ -605,12 +765,14 @@ function viewVotingStatus() {
         const status = AppState.userData.hasVoted ? 'You have already voted.' : 'You have not voted yet.';
         alert(`Voting Status:\n\nName: ${AppState.userData.name}\nLocation: ${AppState.userData.location}\nStatus: ${status}`);
     } else {
-        alert('Voting status information is not available.');
+        alert('Please complete the voting process to view your status.');
     }
 }
 
 // Show loading overlay
 function showLoading(show) {
+    if (!loadingOverlay) return;
+    
     if (show) {
         loadingOverlay.classList.add('active');
     } else {
@@ -620,8 +782,15 @@ function showLoading(show) {
 
 // Show toast notification
 function showToast(message, type = 'success') {
+    if (!toast) {
+        console.log('Toast:', message);
+        return;
+    }
+    
     const toastIcon = toast.querySelector('.toast-icon');
     const toastMessage = toast.querySelector('.toast-message');
+    
+    if (!toastIcon || !toastMessage) return;
     
     // Set icon based on type
     switch(type) {
@@ -652,18 +821,7 @@ function showToast(message, type = 'success') {
 
 // Hide toast
 function hideToast() {
-    toast.style.display = 'none';
+    if (toast) {
+        toast.style.display = 'none';
+    }
 }
-
-// Add smooth scrolling to navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
-});

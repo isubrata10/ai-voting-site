@@ -620,6 +620,14 @@
     <script src="script.js"></script>
 <!-- Code injected by live-server -->
 <script>
+    function openRegistration() {
+    console.log('Emergency openRegistration called');
+    const modal = document.getElementById('votingModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+}
 	// <![CDATA[  <-- For SVG support
 	if ('WebSocket' in window) {
 		(function () {
