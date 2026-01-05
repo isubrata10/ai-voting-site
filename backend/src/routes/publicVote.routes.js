@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const Candidate = require('../models/Candidate');
 const Vote = require('../models/Vote');
 const crypto = require('crypto');
 

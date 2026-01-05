@@ -1,5 +1,4 @@
 
-const User = require('../models/User');
 const OTPService = require('../services/otp.service');
 const AadhaarService = require('../services/aadhaar.service');
 const { generateToken } = require('../middleware/auth');
