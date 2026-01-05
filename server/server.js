@@ -24,6 +24,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/vote', require('./routes/vote'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/candidates', require('./routes/candidates'));
+// Also expose auth endpoints at /api/* to match frontend expectations
+app.use('/api', require('./routes/auth'));
 
 // Basic route
 app.get('/', (req, res) => {
